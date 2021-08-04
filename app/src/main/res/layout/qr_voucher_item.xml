@@ -5,6 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    app:cardBackgroundColor="@color/blue_A1L80"
     app:cardCornerRadius="7dp"
     app:cardElevation="7dp">
 

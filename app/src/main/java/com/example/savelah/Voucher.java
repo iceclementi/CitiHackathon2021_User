@@ -1,15 +1,17 @@
-package com.example.ahben;
+package com.example.savelah;
 
 public class Voucher {
     private String title;
     private String details;
+    private int value;
     private int cost;
     private int loyaltyBonus;
     private int validity;
 
-    public Voucher(String title, String details, int cost, int loyaltyBonus, int validity) {
+    public Voucher(String title, String details, int value, int cost, int loyaltyBonus, int validity) {
         this.title = title;
         this.details = details;
+        this.value = value;
         this.cost = cost;
         this.loyaltyBonus = loyaltyBonus;
         this.validity = validity;
@@ -29,6 +31,14 @@ public class Voucher {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public int getCost() {

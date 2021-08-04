@@ -1,6 +1,5 @@
-package com.example.ahben;
+package com.example.savelah;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -89,6 +88,7 @@ public class QrRecyclerViewAdapter extends RecyclerView.Adapter<QrRecyclerViewAd
                 TextView popupTitle;
                 TextView popupDetails;
                 TextView popupExpiry;
+                Button claimButton;
                 Button cancelButton;
 
                 popupDialog.setContentView(R.layout.qr_code_popup);
@@ -97,6 +97,7 @@ public class QrRecyclerViewAdapter extends RecyclerView.Adapter<QrRecyclerViewAd
                 popupTitle = popupDialog.findViewById(R.id.qrCodePopupTitle);
                 popupDetails = popupDialog.findViewById(R.id.qrCodePopupDetails);
                 popupExpiry = popupDialog.findViewById(R.id.qrCodePopupExpiry);
+                claimButton = popupDialog.findViewById(R.id.qrCodePopupClaimButton);
                 cancelButton = popupDialog.findViewById(R.id.qrCodePopupCancelButton);
 
                 QRGEncoder encoder = new QRGEncoder(voucher.toString(), null, QRGContents.Type.TEXT, 128);
@@ -104,6 +105,17 @@ public class QrRecyclerViewAdapter extends RecyclerView.Adapter<QrRecyclerViewAd
                 popupTitle.setText(voucher.getTitle());
                 popupDetails.setText(voucher.getDetails());
                 popupExpiry.setText("Expires on " + voucher.getExpiryDate());
+
+                claimButton.setOnClickListener(l -> {
+                    if (Database.getInstance(context).removeFromMyVouchers(voucher)) {
+                        Toast.makeText(context, "Voucher Successfully Claimed!", Toast.LENGTH_SHORT).show();
+                        setVouchers(Database.getInstance(context).getMyVouchers());
+                    } else {
+                        Toast.makeText(context, "Oops! Something went wrong!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    popupDialog.dismiss();
+                });
 
                 cancelButton.setOnClickListener(l -> popupDialog.dismiss());
 

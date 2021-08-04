@@ -1,4 +1,4 @@
-package com.example.ahben;
+package com.example.savelah;
 
 import com.google.gson.Gson;
 
@@ -7,15 +7,15 @@ public class MyVoucher {
     private String id;
     private String title;
     private String details;
-    private int cost;
+    private int value;
     private String expiryDate;
     private VoucherStatus status;
 
-    public MyVoucher(String id, String title, String details, int cost, String expiryDate, VoucherStatus status) {
+    public MyVoucher(String id, String title, String details, int value, String expiryDate, VoucherStatus status) {
         this.id = id;
         this.title = title;
         this.details = details;
-        this.cost = cost;
+        this.value = value;
         this.expiryDate = expiryDate;
         this.status = status;
     }
@@ -24,7 +24,7 @@ public class MyVoucher {
         this.id = generateRandomId();
         this.title = voucher.getTitle();
         this.details = voucher.getDetails();
-        this.cost = voucher.getCost();
+        this.value = voucher.getValue();
         this.expiryDate = Utils.getExpiryDate(voucher.getValidity());
         this.status = validateStatus();
     }
@@ -53,12 +53,12 @@ public class MyVoucher {
         this.details = details;
     }
 
-    public int getCost() {
-        return cost;
+    public int getValue() {
+        return value;
     }
 
-    public void setCost(int cost) {
-        this.cost = cost;
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public String getExpiryDate() {

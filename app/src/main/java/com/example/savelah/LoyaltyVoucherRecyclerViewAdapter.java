@@ -1,4 +1,4 @@
-package com.example.ahben;
+package com.example.savelah;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,18 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecyclerViewAdapter.ViewHolder> {
-    private static final String TAG = "VoucherRVA";
+public class LoyaltyVoucherRecyclerViewAdapter extends RecyclerView.Adapter<LoyaltyVoucherRecyclerViewAdapter.ViewHolder> {
+    private static final String TAG = "LoyaltyVoucherRVA";
 
     private ArrayList<Voucher> vouchers = new ArrayList<>();
     private Context context;
-    private String parentActivity;
+    private TextView loyaltyPoints;
 
     private Dialog popupDialog;
 
-    public VoucherRecyclerViewAdapter(Context context, String parentActivity) {
+    public LoyaltyVoucherRecyclerViewAdapter(Context context, TextView loyaltyPoints) {
         this.context = context;
-        this.parentActivity = parentActivity;
+        this.loyaltyPoints = loyaltyPoints;
 
         popupDialog = new Dialog(context);
     }
@@ -43,11 +43,11 @@ public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecy
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VoucherRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LoyaltyVoucherRecyclerViewAdapter.ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: Called");
         holder.voucherTitle.setText(vouchers.get(position).getTitle());
         holder.voucherDetails.setText(vouchers.get(position).getDetails());
-        holder.voucherCost.setText("$" + vouchers.get(position).getCost());
+        holder.voucherCost.setText(vouchers.get(position).getCost() + "LP");
     }
 
     @Override
@@ -83,24 +83,21 @@ public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecy
                 TextView popupTitle;
                 TextView popupDetails;
                 TextView popupCost;
-                TextView popupLoyalty;
                 TextView popupExpiry;
                 Button purchaseButton;
                 Button cancelButton;
 
-                popupDialog.setContentView(R.layout.voucher_popup);
+                popupDialog.setContentView(R.layout.loyalty_voucher_popup);
                 popupTitle = popupDialog.findViewById(R.id.voucherPopupTitle);
                 popupDetails = popupDialog.findViewById(R.id.voucherPopupDetails);
                 popupCost = popupDialog.findViewById(R.id.voucherPopupCost);
-                popupLoyalty = popupDialog.findViewById(R.id.voucherPopupLoyalty);
                 popupExpiry = popupDialog.findViewById(R.id.voucherPopupExpiry);
                 purchaseButton = popupDialog.findViewById(R.id.voucherPopupPurchaseButton);
                 cancelButton = popupDialog.findViewById(R.id.voucherPopupCancelButton);
 
                 popupTitle.setText(voucher.getTitle());
                 popupDetails.setText(voucher.getDetails());
-                popupCost.setText("$" + voucher.getCost());
-                popupLoyalty.setText(voucher.getLoyaltyBonus() + "LP");
+                popupCost.setText(voucher.getCost() + "LP");
                 popupExpiry.setText(voucher.getValidity() + " DAYS");
 
                 purchaseButton.setOnClickListener(l -> {
@@ -108,10 +105,15 @@ public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecy
                     builder.setMessage("Are you sure you want to purchase the " + voucher.getTitle() + " voucher?");
                     builder.setPositiveButton("Yes", (dialog, which) -> {
 
-                        if (Database.getInstance(context).addToMyVouchers(new MyVoucher(voucher))) {
-                            Toast.makeText(context, "Voucher Purchased", Toast.LENGTH_SHORT).show();
+                        if (Database.getInstance(context).removeLP(voucher.getCost())) {
+                            if (Database.getInstance(context).addToMyVouchers(new MyVoucher(voucher))) {
+                                loyaltyPoints.setText(String.valueOf(Database.getInstance(context).getMyLP()));
+                                Toast.makeText(context, "Voucher Purchased", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Something wrong happened, try again", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(context, "Something wrong happened, try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Oh no! You don't have enough Loyalty Points!", Toast.LENGTH_SHORT).show();
                         }
 
                         popupDialog.dismiss();

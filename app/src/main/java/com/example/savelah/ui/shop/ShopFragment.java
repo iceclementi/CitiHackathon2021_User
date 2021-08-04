@@ -1,25 +1,19 @@
-package com.example.ahben.ui.shop;
+package com.example.savelah.ui.shop;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ahben.Database;
-import com.example.ahben.Voucher;
-import com.example.ahben.VoucherRecyclerViewAdapter;
-import com.example.ahben.databinding.FragmentShopBinding;
-
-import java.util.ArrayList;
+import com.example.savelah.Database;
+import com.example.savelah.VoucherRecyclerViewAdapter;
+import com.example.savelah.databinding.FragmentShopBinding;
 
 public class ShopFragment extends Fragment {
 
