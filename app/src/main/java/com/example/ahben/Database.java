@@ -28,7 +28,7 @@ public class Database {
         }
 
         if (getMyVouchers() == null) {
-            editor.putString(MY_VOUCHERS_KEY, new Gson().toJson(new ArrayList<Voucher>()));
+            editor.putString(MY_VOUCHERS_KEY, new Gson().toJson(new ArrayList<MyVoucher>()));
             editor.commit();
         }
     }
@@ -41,12 +41,19 @@ public class Database {
         return instance;
     }
 
+    private void reset() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(MY_VOUCHERS_KEY, new Gson().toJson(new ArrayList<MyVoucher>()));
+        editor.commit();
+    }
+
+
     private void initialiseVouchers() {
         ArrayList<Voucher> vouchers = new ArrayList<>();
-        vouchers.add(new Voucher("456", "$5 OFF", "WITH MINIMUM SPENDING OF $50", 5, 1, 30));
-        vouchers.add(new Voucher("156", "$10 OFF", "WITH MINIMUM SPENDING OF $100", 10, 2, 30));
-        vouchers.add(new Voucher("123", "$20 OFF", "WITH MINIMUM SPENDING OF $200", 20, 5, 30));
-        vouchers.add(new Voucher("222", "$50 OFF", "WITH MINIMUM SPENDING OF $500", 50, 20, 30));
+        vouchers.add(new Voucher("$5 OFF", "WITH MINIMUM SPENDING OF $50", 5, 1, 30));
+        vouchers.add(new Voucher("$10 OFF", "WITH MINIMUM SPENDING OF $100", 10, 2, 30));
+        vouchers.add(new Voucher("$20 OFF", "WITH MINIMUM SPENDING OF $200", 20, 5, 30));
+        vouchers.add(new Voucher("$50 OFF", "WITH MINIMUM SPENDING OF $500", 50, 20, 30));
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(STORE_VOUCHERS_KEY, new Gson().toJson(vouchers));
@@ -58,8 +65,44 @@ public class Database {
         return new Gson().fromJson(sharedPreferences.getString(STORE_VOUCHERS_KEY, null), type);
     }
 
-    public ArrayList<Voucher> getMyVouchers() {
-        Type type = new TypeToken<ArrayList<Voucher>>(){}.getType();
+    public ArrayList<MyVoucher> getMyVouchers() {
+        Type type = new TypeToken<ArrayList<MyVoucher>>(){}.getType();
         return new Gson().fromJson(sharedPreferences.getString(MY_VOUCHERS_KEY, null), type);
+    }
+
+    // To use cloud database instead
+    public boolean addToMyVouchers(MyVoucher voucher) {
+        ArrayList<MyVoucher> vouchers = getMyVouchers();
+        if (vouchers != null) {
+            if (vouchers.add(voucher)) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove(MY_VOUCHERS_KEY);
+                editor.putString(MY_VOUCHERS_KEY, new Gson().toJson(vouchers));
+                editor.commit();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // To use cloud database instead
+    public boolean removeFromMyVouchers(MyVoucher voucher) {
+        ArrayList<MyVoucher> vouchers = getMyVouchers();
+        if (vouchers != null) {
+            for (MyVoucher v : vouchers) {
+                if (v.getId().equals(voucher.getId())) {
+                    if (vouchers.remove(v)) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.remove(MY_VOUCHERS_KEY);
+                        editor.putString(MY_VOUCHERS_KEY, new Gson().toJson(vouchers));
+                        editor.commit();
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

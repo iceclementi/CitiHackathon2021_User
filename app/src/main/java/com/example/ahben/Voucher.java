@@ -1,32 +1,18 @@
 package com.example.ahben;
 
 public class Voucher {
-    private String id;
     private String title;
     private String details;
     private int cost;
     private int loyaltyBonus;
     private int validity;
-    private String expiryDate;
-    private VoucherStatus status;
 
-    public Voucher(String id, String title, String details, int cost, int loyaltyBonus, int validity) {
-        this.id = id;
+    public Voucher(String title, String details, int cost, int loyaltyBonus, int validity) {
         this.title = title;
         this.details = details;
         this.cost = cost;
         this.loyaltyBonus = loyaltyBonus;
         this.validity = validity;
-
-        status = VoucherStatus.VALID;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -69,24 +55,14 @@ public class Voucher {
         this.validity = validity;
     }
 
-    public String getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(String expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
     @Override
     public String toString() {
-        return "Book{" +
-                "id=" + id +
+        return "Voucher {" +
                 ", title='" + title + '\'' +
                 ", details='" + details + '\'' +
                 ", cost=" + cost +
                 ", loyaltyBonus=" + loyaltyBonus +
                 ", validity=" + validity +
-                ", expiryDate='" + expiryDate + '\'' +
                 '}';
     }
 }

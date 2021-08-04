@@ -10,15 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -110,7 +107,13 @@ public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecy
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setMessage("Are you sure you want to purchase the " + voucher.getTitle() + " voucher?");
                     builder.setPositiveButton("Yes", (dialog, which) -> {
-                        Toast.makeText(context, "Voucher Purchased", Toast.LENGTH_SHORT).show();
+
+                        if (Database.getInstance(context).addToMyVouchers(new MyVoucher(voucher))) {
+                            Toast.makeText(context, "Voucher Purchased", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Something wrong happened, try again", Toast.LENGTH_SHORT).show();
+                        }
+
                         popupDialog.dismiss();
                         notifyDataSetChanged();
                     });
