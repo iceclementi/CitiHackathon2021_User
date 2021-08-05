@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_rewards_black_24dp"
         android:title="@string/title_rewards" />
 
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_profile_black_24dp"
+        android:title="@string/title_profile" />
+
 </menu>

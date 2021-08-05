@@ -100,7 +100,8 @@ public class QrRecyclerViewAdapter extends RecyclerView.Adapter<QrRecyclerViewAd
                 claimButton = popupDialog.findViewById(R.id.qrCodePopupClaimButton);
                 cancelButton = popupDialog.findViewById(R.id.qrCodePopupCancelButton);
 
-                QRGEncoder encoder = new QRGEncoder(voucher.toString(), null, QRGContents.Type.TEXT, 128);
+                String toEncode = Constant.SHOPPER_ID + ": " + voucher.toString();
+                QRGEncoder encoder = new QRGEncoder(toEncode, null, QRGContents.Type.TEXT, 128);
                 qrCode.setImageBitmap(encoder.getBitmap());
                 popupTitle.setText(voucher.getTitle());
                 popupDetails.setText(voucher.getDetails());
