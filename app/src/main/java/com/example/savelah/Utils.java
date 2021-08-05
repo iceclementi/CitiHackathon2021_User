@@ -2,6 +2,7 @@ package com.example.savelah;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -18,7 +19,6 @@ public class Utils {
     public static String getExpiryDate(int days) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, days);
-
         return df.format(calendar.getTime());
     }
 
