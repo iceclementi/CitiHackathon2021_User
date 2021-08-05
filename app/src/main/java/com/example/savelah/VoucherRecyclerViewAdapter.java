@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,13 +26,13 @@ public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecy
 
     private ArrayList<Voucher> vouchers = new ArrayList<>();
     private Context context;
-    private String parentActivity;
+    private TextView wallet;
 
     private Dialog popupDialog;
 
-    public VoucherRecyclerViewAdapter(Context context, String parentActivity) {
+    public VoucherRecyclerViewAdapter(Context context, TextView wallet) {
         this.context = context;
-        this.parentActivity = parentActivity;
+        this.wallet = wallet;
 
         popupDialog = new Dialog(context);
     }
@@ -88,6 +90,10 @@ public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecy
                 Button purchaseButton;
                 Button cancelButton;
 
+                EditText inputQuantity;
+                ImageView decrementButton;
+                ImageView incrementButton;
+
                 popupDialog.setContentView(R.layout.voucher_popup);
                 popupTitle = popupDialog.findViewById(R.id.voucherPopupTitle);
                 popupDetails = popupDialog.findViewById(R.id.voucherPopupDetails);
@@ -97,23 +103,51 @@ public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecy
                 purchaseButton = popupDialog.findViewById(R.id.voucherPopupPurchaseButton);
                 cancelButton = popupDialog.findViewById(R.id.voucherPopupCancelButton);
 
+                inputQuantity = popupDialog.findViewById(R.id.inputQuantity);
+                decrementButton = popupDialog.findViewById(R.id.decrementButton);
+                incrementButton = popupDialog.findViewById(R.id.incrementButton);
+
                 popupTitle.setText(voucher.getTitle());
                 popupDetails.setText(voucher.getDetails());
                 popupCost.setText("$" + voucher.getCost());
                 popupLoyalty.setText(voucher.getLoyaltyBonus() + "LP");
                 popupExpiry.setText(voucher.getValidity() + " DAYS");
 
+                decrementButton.setOnClickListener(l -> {
+                    String updatedQuantity = decrement(inputQuantity.getText().toString());
+                    inputQuantity.setText(updatedQuantity);
+                });
+                incrementButton.setOnClickListener(l -> {
+                    String updatedQuantity = increment(inputQuantity.getText().toString());
+                    inputQuantity.setText(updatedQuantity);
+                });
+
                 purchaseButton.setOnClickListener(l -> {
+
+                    int quantity = getQuantity(inputQuantity.getText().toString());
+                    if (quantity < 1) {
+                        Toast.makeText(context, "Invalid Quantity", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setMessage("Are you sure you want to purchase the " + voucher.getTitle() + " voucher?");
+                    builder.setMessage("Are you sure you want to purchase " + quantity + " " + voucher.getTitle() + " voucher(s)?");
                     builder.setPositiveButton("Yes", (dialog, which) -> {
 
-                        if (Database.getInstance(context).addToMyVouchers(new MyVoucher(voucher))) {
-                            Database.getInstance(context).addLP(voucher.getLoyaltyBonus());
-                            Toast.makeText(context, "Voucher Purchased", Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
+                        if (Database.getInstance(context).removeFromWallet(voucher.getCost() * quantity)) {
+                            for (int i = 0; i < quantity; ++i) {
+                                if (Database.getInstance(context).addToMyVouchers(new MyVoucher(voucher))) {
+                                    Database.getInstance(context).addLP(voucher.getLoyaltyBonus());
+                                    wallet.setText(String.valueOf(Database.getInstance(context).getWallet()));
+                                    Toast.makeText(context, "Voucher(s) Purchased", Toast.LENGTH_SHORT).show();
+                                    notifyDataSetChanged();
+                                } else {
+                                    Toast.makeText(context, "Something wrong happened, try again", Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
+                            }
                         } else {
-                            Toast.makeText(context, "Something wrong happened, try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Oh no! You don't have enough money in your wallet!", Toast.LENGTH_SHORT).show();
                         }
 
                         popupDialog.dismiss();
@@ -127,6 +161,39 @@ public class VoucherRecyclerViewAdapter extends RecyclerView.Adapter<VoucherRecy
                 popupDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 popupDialog.show();
             });
+        }
+
+        private int getQuantity(String valueString) {
+            try {
+                int value = Integer.parseInt(valueString);
+                return value >= 1 && value <= 99 ? value : 0;
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+
+        private String increment(String valueString) {
+            try {
+                int value = Integer.parseInt(valueString);
+                if (value < 99) {
+                    value += 1;
+                }
+                return String.valueOf(value);
+            } catch (NumberFormatException e) {
+                return "1";
+            }
+        }
+
+        private String decrement(String valueString) {
+            try {
+                int value = Integer.parseInt(valueString);
+                if (value > 1) {
+                    value -= 1;
+                }
+                return String.valueOf(value);
+            } catch (NumberFormatException e) {
+                return "1";
+            }
         }
     }
 }

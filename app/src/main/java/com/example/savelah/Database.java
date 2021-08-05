@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Database {
     private static final String STORE_VOUCHERS_KEY = "STORE_VOUCHERS";
     private static final String MY_VOUCHERS_KEY = "MY_VOUCHERS";
+    private static final String WALLET_KEY = "WALLET";
     private static final String MY_LP_KEY = "MY_LP";
     private static final String MY_LOYALTY_KEY = "MY_LOYALTY";
     private static final String MY_LOYALTY_VH_Key = "MY_LOYALTY_VH";
@@ -34,11 +35,16 @@ public class Database {
             editor.commit();
         }
 
-        if (getMyLP() == 0) {
-
+        if (getMyLP() < 0) {
+            editor.putInt(MY_LP_KEY, 0);
+            editor.commit();
         }
 
-        initialiseLoyalty();
+        if (getWallet() < 0) {
+            editor.putInt(WALLET_KEY, 0);
+            editor.commit();
+        }
+
         if (getMyLoyaltyPoints() == null) {
             initialiseLoyalty();
         }
@@ -92,8 +98,13 @@ public class Database {
         return new Gson().fromJson(sharedPreferences.getString(MY_VOUCHERS_KEY, null), type);
     }
 
+    public int getWallet() {
+        return sharedPreferences.getInt(WALLET_KEY, -1);
+    }
+
+
     public int getMyLP() {
-        return sharedPreferences.getInt(MY_LP_KEY, 0);
+        return sharedPreferences.getInt(MY_LP_KEY, -1);
     }
 
     public ArrayList<MyLoyaltyPoints> getMyLoyaltyPoints() {
@@ -164,17 +175,25 @@ public class Database {
         }
     }
 
-    public boolean addToMyLoyalty(MyLoyaltyPoints voucher) {
-        ArrayList<MyLoyaltyPoints> loyalty = getMyLoyaltyPoints();
-        if (loyalty != null) {
-            if (loyalty.add(voucher)) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.remove(MY_LOYALTY_KEY);
-                editor.putString(MY_LOYALTY_KEY, new Gson().toJson(loyalty));
-                editor.commit();
-                return true;
-            }
+    public void addToWallet(int value) {
+        int currentValue = getWallet();
+        currentValue += value;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(WALLET_KEY, currentValue);
+        editor.commit();
+    }
+
+    public boolean removeFromWallet(int value) {
+        int currentValue = getWallet();
+
+        if (currentValue >= value) {
+            currentValue -= value;
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(WALLET_KEY, currentValue);
+            editor.commit();
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 }

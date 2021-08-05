@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,6 +25,9 @@ public class ShopFragment extends Fragment {
     private RecyclerView voucherRecyclerView;
     private VoucherRecyclerViewAdapter adapter;
 
+    private TextView wallet;
+    private ImageButton walletButton;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         shopViewModel =
@@ -31,23 +36,28 @@ public class ShopFragment extends Fragment {
         binding = FragmentShopBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-//        final TextView textView = binding.textShop;
-//        shopViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
+        wallet = binding.wallet;
+        wallet.setText(String.valueOf(Database.getInstance(getContext()).getWallet()));
+
+        walletButton = binding.walletButton;
+        addListener();
 
         voucherRecyclerView = binding.shopRecyclerView;
 
-        adapter = new VoucherRecyclerViewAdapter(getContext(), "Shop");
+        adapter = new VoucherRecyclerViewAdapter(getContext(), wallet);
         voucherRecyclerView.setAdapter(adapter);
         voucherRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter.setVouchers(Database.getInstance(getContext()).getStoreVouchers());
 
         return root;
+    }
+
+    private void addListener() {
+        walletButton.setOnClickListener(v -> {
+            Database.getInstance(getContext()).addToWallet(20);
+            wallet.setText(String.valueOf(Database.getInstance(getContext()).getWallet()));
+        });
     }
 
     @Override

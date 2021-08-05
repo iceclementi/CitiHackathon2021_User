@@ -6,12 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".ui.shop.ShopFragment">
 
+    <RelativeLayout
+        android:id="@+id/walletCurrency"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/currency_display_style" >
+
+        <ImageButton
+            android:id="@+id/walletButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/ic_wallet_color_24dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/circle_style" />
+
+        <TextView
+            android:id="@+id/wallet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/walletButton"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="25dp"
+            android:text="50"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shopRecyclerView"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/walletCurrency" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

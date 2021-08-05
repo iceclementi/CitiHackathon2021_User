@@ -47,10 +47,6 @@ public class RewardsFragment extends Fragment {
         return root;
     }
 
-    private void setLister() {
-
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
