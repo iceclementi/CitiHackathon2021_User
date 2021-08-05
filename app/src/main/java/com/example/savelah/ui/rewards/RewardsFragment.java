@@ -1,6 +1,5 @@
-package com.example.savelah.ui.profile;
+package com.example.savelah.ui.rewards;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,22 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.savelah.Database;
 import com.example.savelah.LoyaltyVoucherRecyclerViewAdapter;
-import com.example.savelah.databinding.FragmentProfileBinding;
+import com.example.savelah.databinding.FragmentRewardsBinding;
 
-public class ProfileFragment extends Fragment {
+public class RewardsFragment extends Fragment {
 
-    private ProfileViewModel notificationsViewModel;
-    private FragmentProfileBinding binding;
+    private RewardsViewModel rewardsViewModel;
+    private FragmentRewardsBinding binding;
 
     private RecyclerView voucherRecyclerView;
     private LoyaltyVoucherRecyclerViewAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                new ViewModelProvider(this).get(ProfileViewModel.class);
+        rewardsViewModel =
+                new ViewModelProvider(this).get(RewardsViewModel.class);
 
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        binding = FragmentRewardsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView loyaltyPoints = binding.loyaltyPoints;

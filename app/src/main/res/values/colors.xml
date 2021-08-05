@@ -11,9 +11,11 @@
     <color name="blue_A1L80">#D6DCE5</color>
     <color name="blue_A1L60">#ADB9CA</color>
     <color name="blue_A1L40">#8497B0</color>
+    <color name="dark_blue">#466388</color>
 
     <color name="button_positive">#64D6BC</color>
     <color name="button_negative">#BDBDBD</color>
 
     <color name="error">#F44336</color>
+    <color name="gold">#FDCA31</color>
 </resources>

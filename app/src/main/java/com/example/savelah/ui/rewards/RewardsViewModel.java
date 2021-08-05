@@ -1,14 +1,14 @@
-package com.example.savelah.ui.profile;
+package com.example.savelah.ui.rewards;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ProfileViewModel extends ViewModel {
+public class RewardsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public ProfileViewModel() {
+    public RewardsViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is profile fragment");
     }
